@@ -32,6 +32,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: shorturl
+      BASE_URL: http://13.215.48.33:8000
 
 volumes:
   postgres_data:

@@ -5,10 +5,12 @@ from datetime import datetime
 import random, string
 from redis_client import get_redis_client
 from fastapi.middleware.cors import CORSMiddleware
+import os
 from dotenv import load_dotenv
 load_dotenv()  # 預設會讀取 .env 檔
 
 app = FastAPI()
+BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 
 # 加上 CORS middleware
 app.add_middleware(
@@ -26,12 +28,12 @@ def generate_short_code(length=6):
 def shortern_url(long_url: str = Form(...)):
     cached_code = redis_client.get(f"longurl:{long_url}")
     if cached_code:
-        return {"short_url": f"http://localhost:8000/{cached_code}"}
+        return {"short_url": f"{BASE_URL}/{cached_code}"}
     existing_code = get_code_by_long_url(long_url)
     if existing_code:
         redis_client.set(f"longurl:{long_url}", existing_code, ex=60*60)
         redis_client.set(existing_code, long_url, ex=60*60)
-        return {"short_url": f"http://localhost:8000/{existing_code}"}
+        return {"short_url": f"{BASE_URL}/{existing_code}"}
     
     for _ in range(5):  # 最多嘗試 5 次
         short_code = generate_short_code()
@@ -40,7 +42,7 @@ def shortern_url(long_url: str = Form(...)):
 
     try:
         insert_url(long_url, short_code)
-        return {"short_url": f"http://localhost:8000/{short_code}", }
+        return {"short_url": f"{BASE_URL}/{short_code}", }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
