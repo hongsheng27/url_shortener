@@ -13,7 +13,7 @@ app = FastAPI()
 # 加上 CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 或指定 ["http://localhost:3000"]
+    allow_origins = ["https://frontend-url-shortener-2v980dtzs-hungshengs-projects.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
