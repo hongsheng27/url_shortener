@@ -1,0 +1,27 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# Mac 系統自動產生
+.DS_Store
+
+# Logs
+*.log
+
+# Secret files
+.env
+
+# pyproject.lock or poetry
+poetry.lock
