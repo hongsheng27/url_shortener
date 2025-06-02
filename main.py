@@ -6,6 +6,7 @@ import random, string
 from redis_client import get_redis_client
 from fastapi.middleware.cors import CORSMiddleware
 import os
+from pydantic import BaseModel
 from dotenv import load_dotenv
 load_dotenv()  # 預設會讀取 .env 檔
 
@@ -24,8 +25,12 @@ app.add_middleware(
 def generate_short_code(length=6):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
+class ShortenRequest(BaseModel):
+    long_url: str
+
 @app.post('/shorten')
-def shortern_url(long_url: str = Form(...)):
+def shortern_url(data: ShortenRequest):
+    long_url = data.long_url
     cached_code = redis_client.get(f"longurl:{long_url}")
     if cached_code:
         return {"short_url": f"{BASE_URL}/{cached_code}"}
