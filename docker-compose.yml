@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:17
+    restart: always
+    container_name: shorturl_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shorturl
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7
+    container_name: shorturl_redis
+    ports:
+      - "6379:6379"
+  web:
+    build:
+      context: .
+    container_name: shorturl_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DB_HOST: db
+      REDIS_HOST: redis
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: shorturl
+
+volumes:
+  postgres_data:
