@@ -16,7 +16,7 @@ BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 # 加上 CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["https://frontend-url-shortener-2v980dtzs-hungshengs-projects.vercel.app"],
+    allow_origins = ["https://frontend-url-shortener.onrender.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -49,7 +49,6 @@ def shorten_url(long_url: str = Form(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 redis_client = get_redis_client()
-
 
 @app.get("/{code}")
 def direct_url(code: str):
