@@ -25,12 +25,9 @@ app.add_middleware(
 def generate_short_code(length=6):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
-class ShortenRequest(BaseModel):
-    long_url: str
 
 @app.post('/shorten')
-def shortern_url(data: ShortenRequest):
-    long_url = data.long_url
+def shorten_url(long_url: str = Form(...)):
     cached_code = redis_client.get(f"longurl:{long_url}")
     if cached_code:
         return {"short_url": f"{BASE_URL}/{cached_code}"}
