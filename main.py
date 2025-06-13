@@ -16,7 +16,7 @@ BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 # 加上 CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins = ["https://frontend-url-shortener.onrender.com"],
+    allow_origins = ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
