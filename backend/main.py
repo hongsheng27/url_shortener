@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 load_dotenv()  # 預設會讀取 .env 檔
 
 app = FastAPI()
-BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
 
 # 加上 CORS middleware
 app.add_middleware(
