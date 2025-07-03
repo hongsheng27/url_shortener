@@ -44,7 +44,7 @@ def shorten_url(long_url: str = Form(...)):
 
     try:
         insert_url(long_url, short_code)
-        return {"short_url": f"{BASE_URL}/{short_code}", }
+        return {"short_url": f"{BASE_URL}/api/{short_code}", }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
