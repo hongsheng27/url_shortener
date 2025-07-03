@@ -30,12 +30,12 @@ def generate_short_code(length=6):
 def shorten_url(long_url: str = Form(...)):
     cached_code = redis_client.get(f"longurl:{long_url}")
     if cached_code:
-        return {"short_url": f"{BASE_URL}/{cached_code}"}
+        return {"short_url": f"{BASE_URL}/api/{cached_code}"}
     existing_code = get_code_by_long_url(long_url)
     if existing_code:
         redis_client.set(f"longurl:{long_url}", existing_code, ex=60*60)
         redis_client.set(existing_code, long_url, ex=60*60)
-        return {"short_url": f"{BASE_URL}/{existing_code}"}
+        return {"short_url": f"{BASE_URL}/api/{existing_code}"}
     
     for _ in range(5):  # 最多嘗試 5 次
         short_code = generate_short_code()
