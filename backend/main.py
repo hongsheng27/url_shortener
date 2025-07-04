@@ -52,11 +52,13 @@ redis_client = get_redis_client()
 
 @app.get("/{code}")
 def direct_url(code: str):
+    print(code)
     cached_url = redis_client.get(code)
     if cached_url:
         return RedirectResponse(cached_url)
     
     long_url = get_url_by_code(code)
+    print(long_url)
     if not long_url: 
         return RedirectResponse(f"{BASE_URL}/404", status_code=302)
     
