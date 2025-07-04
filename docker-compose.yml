@@ -35,13 +35,13 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
       DB_NAME: shorturl
-      BASE_URL: https://hungshengliu.xyz
+      BASE_URL: hungshengliu.xyz
 
   frontend:
     build:
       context: ./frontend
       args:
-        - NEXT_PUBLIC_API_URL=https://hungshengliu.xyz
+        - NEXT_PUBLIC_API_URL=hungshengliu.xyz
     container_name: shorturl_frontend
     ports:
       - "3000:3000"

@@ -30,12 +30,12 @@ def generate_short_code(length=6):
 def shorten_url(long_url: str = Form(...)):
     cached_code = redis_client.get(f"longurl:{long_url}")
     if cached_code:
-        return {"short_url": f"{BASE_URL}/api/{cached_code}"}
+        return {"short_url": f"{BASE_URL}/{cached_code}"}
     existing_code = get_code_by_long_url(long_url)
     if existing_code:
         redis_client.set(f"longurl:{long_url}", existing_code, ex=60*60)
         redis_client.set(existing_code, long_url, ex=60*60)
-        return {"short_url": f"{BASE_URL}/api/{existing_code}"}
+        return {"short_url": f"{BASE_URL}/{existing_code}"}
     
     for _ in range(5):  # 最多嘗試 5 次
         short_code = generate_short_code()
@@ -44,7 +44,7 @@ def shorten_url(long_url: str = Form(...)):
 
     try:
         insert_url(long_url, short_code)
-        return {"short_url": f"{BASE_URL}/api/{short_code}", }
+        return {"short_url": f"{BASE_URL}/{short_code}", }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -52,13 +52,15 @@ redis_client = get_redis_client()
 
 @app.get("/{code}")
 def direct_url(code: str):
+    print('code', code)
     cached_url = redis_client.get(code)
     if cached_url:
         return RedirectResponse(cached_url)
     
     long_url = get_url_by_code(code)
-    if not long_url:
-        raise HTTPException(status_code=404, detail="URL not found")
+    print('long_url', long_url)
+    if not long_url: 
+        return RedirectResponse(f"{BASE_URL}/404", status_code=302)
     
     redis_client.set(code, long_url, ex=60*60)
     redis_client.set(f"longurl:{long_url}", code, ex=60*60)

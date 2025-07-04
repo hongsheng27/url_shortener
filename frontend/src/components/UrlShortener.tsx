@@ -13,9 +13,7 @@ export default function UrlShortener() {
 
     try {
       const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-        }/api/shorten`,
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/shorten`,
         {
           method: "POST",
           body: new URLSearchParams({ long_url: longUrl }),
